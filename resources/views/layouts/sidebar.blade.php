@@ -44,7 +44,7 @@
         </div>
     </li>
     @endif
-    @if(Auth::user()->level == 'admin_data')
+    @if(Auth::user()->level == 'admin')
     <li class="nav-item {{ setActive(['data_utama*', 'jenis_data*', 'tahun_data*', 'input_data*']) }}">
         <a class="nav-link " data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
             <i class="menu-icon mdi mdi-content-copy"></i>
@@ -68,6 +68,9 @@
                 <li class="nav-item">
                     <a class="nav-link {{ setActive(['input_data*']) }}" href="{{route('input_data.index')}}">Input
                         Data</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ setActive(['seksi*']) }}" href="{{route('seksi.index')}}">Data Seksi</a>
                 </li>
             </ul>
         </div>

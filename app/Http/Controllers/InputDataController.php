@@ -38,7 +38,7 @@ class InputDataController extends Controller
             return redirect()->to('/');
         }
 
-        $input_datas = InputData::groupBy('web_jenis_data_id')->get();
+        $input_datas = InputData::get();
         return view('input_data.index', compact('input_datas'));
     }
     /**
@@ -103,21 +103,24 @@ class InputDataController extends Controller
         }
 
         $this->validate($request, [
-            'jumlah_data' => 'required|string|max:255',
+            'web_tahun_data_id' => 'required',
+            'web_data_utama_id' => 'required',
+            'web_jenis_data_id' => 'required',
+            'web_kategori_data_id' => 'required',
+            'jumlah_data' => 'required',
         ]);
         $jml = $request->web_kategori_data_id;
         foreach($jml as $key => $val)
         {
-            //InputData::create($request->all());
             $input =new  InputData;
             $input->web_tahun_data_id = $request->web_tahun_data_id;
             $input->web_data_utama_id = $request->web_data_utama_id;
             $input->web_kategori_data_id = $request->web_kategori_data_id[$key];
             $input->web_jenis_data_id = $request->web_jenis_data_id;
             $input->jumlah_data = $request->jumlah_data[$key];
+            $input->save();
         }
         
-        dd($request->all());
         alert()->success('Berhasil.','Data telah ditambahkan!');
         return redirect()->route('input_data.index');
 

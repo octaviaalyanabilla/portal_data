@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\SeksiController;
 use App\Http\Controllers\DataUtamaController;
 use App\Http\Controllers\JenisDataController;
 use App\Http\Controllers\TahunDataController;
@@ -31,10 +32,13 @@ Auth::routes();
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 Route::get('/', [CekDataController::class, 'index']);
+
 Route::get('getJenisCekData/{id}', [CekDataController::class, 'getJenis']);
 Route::get('getKategoriCekData/{id}', [CekDataController::class, 'getKategori']);
 
 Route::resource('/user', UserController::class);
+
+Route::resource('/seksi', SeksiController::class);
 
 Route::resource('/data_utama', DataUtamaController::class);
 
