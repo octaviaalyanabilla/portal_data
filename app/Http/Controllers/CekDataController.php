@@ -50,17 +50,25 @@ class CekDataController extends Controller
             $chart = [];
             foreach ($kategori as $key => $value) 
             {
-               $jumlah = DB::table('web_input_data')
+               $data = DB::table('web_input_data')
                         ->where('web_tahun_data_id',$request->web_tahun_data_id)
                         ->where('web_data_utama_id',$request->web_data_utama_id)
                         ->where('web_jenis_data_id',$request->web_jenis_data_id)
                         ->where('web_kategori_data_id',$kategori[$key]['id'])
-                        ->count();
-                $kategori[$key]['jumlah'] = $jumlah;
-                $total += $jumlah;
+                        ->first();
+                $kategori[$key]['jumlah'] = 0;
+               // dd($data);
+                if($data)
+                {
+                    $kategori[$key]['jumlah'] += $data->jumlah_data;
+                    $total += $data->jumlah_data;
+                    $chart[$key]['label'] = $kategori[$key]['nama_kategori_data'];
+                    $chart[$key]['y'] = $data->jumlah_data;
+                }
+                
+                
                 //generate chart
-                $chart[$key]['label'] = $kategori[$key]['nama_kategori_data'];
-                $chart[$key]['y'] = $jumlah;
+                
             }
             $dataTahun = DB::table('web_tahun_data')->where('id',$request->web_tahun_data_id)->first();
             $dataUtama = DB::table('web_data_utama')->where('id',$request->web_data_utama_id)->first();

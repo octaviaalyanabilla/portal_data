@@ -42,74 +42,41 @@
                                     Tahun Data
                                 </th>
                                 <th>
-                                    Data Utama
+                                    Detail
                                 </th>
-                                <th>
-                                    Jenis Data
-                                </th>
-                                <th>
-                                    Kategori Data
-                                </th>
-                                <th>
-                                    Jumlah Data
-                                </th>
-                                <th>
-                                    Aksi
-                                </th>
+                                
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($input_datas as $input_data)
+                            @foreach ($input_datas as $input_datasKey => $input_datasValue)
                             <tr>
                                 <td>
-                                    {{ $input_data->tahun_data->tahun_data }}
+                                    {{ $input_datasKey }}
                                 </td>
                                 <td class="py-1">
-                                    <a href="{{ route('input_data.show', $input_data->id) }}">
-                                        {{ $input_data->data_utama->nama_data }}
-                                    </a>
-                                </td>
-                                <td>
-                                    {{ $input_data->jenis_data->nama_jenis_data }}
-                                </td>
-                                <td>
-                                    <ul>
-                                        @foreach($input_data->jenis_data->kategori_datas as $value)
-                                        <li>{{$value->nama_kategori_data}}</li>
+                                    @foreach($input_datasValue as $utamaKey => $utamaValue)
+                                    <br>
+                                        <b>{{$utamaKey}}</b>
+                                        <br>
+                                        @foreach($utamaValue as $jenisKey => $jenisValue)
+                                        <br>
+                                            &nbsp;&nbsp;  <b>{{$jenisKey}}</b>
+                                        <br>
+                                            @foreach($jenisValue as $kategoriKey => $kategoriValue)
+                                            <br>
+                                                &nbsp;&nbsp;&nbsp;&nbsp;: <b>{{$kategoriKey}} : {{$kategoriValue['jumlah']}}</b>
+                                            <br>
+                                            @endforeach
                                         @endforeach
-                                    </ul>
+                                    @endforeach
                                 </td>
-                                <td>
-                                    {{ $input_data->jumlah_data }}
-                                </td>
-                                <td>
-                                    <div class="btn-group dropdown">
-                                        <button type="button" class="btn btn-success dropdown-toggle btn-sm"
-                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            Action
-                                        </button>
-                                        <div class="dropdown-menu" x-placement="bottom-start"
-                                            style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 30px, 0px);">
-                                            <a class="dropdown-item"
-                                                href="{{ route('input_data.edit', $input_data->id) }}"> Edit </a>
-                                            <form action="{{ route('input_data.destroy', $input_data->id) }}"
-                                                class="pull-left" method="post">
-                                                {{ csrf_field() }}
-                                                {{ method_field('delete') }}
-                                                <button class="dropdown-item"
-                                                    onclick="return confirm('Anda yakin ingin menghapus data ini?')">
-                                                    Delete
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </td>
+                                
                             </tr>
                             @endforeach
                         </tbody>
                     </table>
                 </div>
-                {{--  {!! $input_datas->links() !!} --}}
+               
             </div>
         </div>
     </div>

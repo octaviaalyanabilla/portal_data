@@ -37,8 +37,36 @@ class InputDataController extends Controller
             Alert::info('Oopss..', 'Anda dilarang masuk ke area ini.');
             return redirect()->to('/');
         }
-
-        $input_datas = InputData::get();
+        $input_datas = [];
+        $dataTahun = DB::table('web_tahun_data')->get();
+        foreach ($dataTahun as $dataTahunKey => $dataTahunvalue) 
+        {
+            $dataUtama = DB::table('web_data_utama')->get();
+            foreach ($dataUtama as $dataUtamaKey => $dataUtamaValue) 
+            {
+                $dataJenis = DB::table('web_jenis_data')->where('web_data_utama_id',$dataUtamaValue->id)->get();
+                foreach ($dataJenis as $dataJenisKey => $dataJenisValue) 
+                {
+                    $dataKategori = DB::table('web_kategori_data')->where('web_jenis_data_id',$dataJenisValue->id)->get();
+                    foreach ($dataKategori as $dataKategoriKey => $dataKategoriValue) 
+                    {   
+                        $data = DB::table('web_input_data')
+                            ->where('web_tahun_data_id',$dataTahunvalue->id)
+                            ->where('web_data_utama_id',$dataUtamaValue->id)
+                            ->where('web_jenis_data_id',$dataJenisValue->id)
+                            ->where('web_kategori_data_id',$dataKategoriValue->id)
+                            ->first();
+                            $input_datas[$dataTahunvalue->tahun_data][$dataUtamaValue->nama_data][$dataJenisValue->nama_jenis_data][$dataKategoriValue->nama_kategori_data]['jumlah'] = 0;
+                        if($data)
+                        {
+                            $input_datas[$dataTahunvalue->tahun_data][$dataUtamaValue->nama_data][$dataJenisValue->nama_jenis_data][$dataKategoriValue->nama_kategori_data]['jumlah'] = $data->jumlah_data;
+                        }
+                       
+                    }
+                }
+            } 
+        }
+       // dd($input_datas['2020']);
         return view('input_data.index', compact('input_datas'));
     }
     /**
