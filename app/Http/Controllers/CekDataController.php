@@ -19,15 +19,9 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class CekDataController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
     public function __construct()
     {
-        // $this->middleware('auth');
+
     }
 
     // ajax calling helper
@@ -40,25 +34,42 @@ class CekDataController extends Controller
         return response()->json($datakategori);
     }
     //end ajax calling helper
-    public function index()
+    public function index(Request $request)
     {
-        // if(Auth::user()->level == 'admin_user') {
-        //     Alert::info('Oopss..', 'Anda dilarang masuk ke area ini.');
-        //     return redirect()->to('/');
-        // }
-
         $cek_datas = InputData::get();
         $data_utama = DataUtama::all();
         $jenis_data = JenisData::all();
         $kategori_data = KategoriData::all();
         $tahun_data = TahunData::all();
+        if(count($request->all()) > 0)
+        {
+            $kategori = DB::table('web_kategori_data')->where('web_jenis_data_id',$request->web_jenis_data_id)->get();
+            $kategori = json_decode(json_encode($kategori),true);
+            $total = 0;
+            $chart = [];
+            foreach ($kategori as $key => $value) 
+            {
+               $jumlah = DB::table('web_input_data')
+                        ->where('web_tahun_data_id',$request->web_tahun_data_id)
+                        ->where('web_data_utama_id',$request->web_data_utama_id)
+                        ->where('web_jenis_data_id',$request->web_jenis_data_id)
+                        ->where('web_kategori_data_id',$kategori[$key]['id'])
+                        ->count();
+                $kategori[$key]['jumlah'] = $jumlah;
+                $total += $jumlah;
+                //generate chart
+                $chart[$key]['label'] = $kategori[$key]['nama_kategori_data'];
+                $chart[$key]['y'] = $jumlah;
+            }
+            $dataTahun = DB::table('web_tahun_data')->where('id',$request->web_tahun_data_id)->first();
+            $dataUtama = DB::table('web_data_utama')->where('id',$request->web_data_utama_id)->first();
+            $dataJenis = DB::table('web_jenis_data')->where('id',$request->web_jenis_data_id)->first();
+            return view('cek_data.hasildata',compact('kategori','total','dataTahun','dataUtama','dataJenis','chart'));
+
+        }
         return view('cek_data.cekdata', compact('cek_datas', 'tahun_data', 'data_utama', 'jenis_data', 'kategori_data'));
     }
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function create()
     {
         if(Auth::user()->level == 'admin_user') {
@@ -99,12 +110,7 @@ class CekDataController extends Controller
         return back();
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function store(Request $request)
     {
         $count = InputData::where('id',$request->input('id'))->count();
@@ -126,12 +132,7 @@ class CekDataController extends Controller
 
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function show($id)
     {
         if((Auth::user()->level == 'admin_user') && (Auth::user()->id != $id)) {
@@ -144,12 +145,7 @@ class CekDataController extends Controller
         return view('cek_data.show', compact('cek_datas'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function edit($id)
     {   
         if((Auth::user()->level == 'admin_user') && (Auth::user()->id != $id)) {
@@ -165,13 +161,6 @@ class CekDataController extends Controller
         return view('cek_data.edit', compact('cek_data', 'jenis_data', 'data_utama', 'kategori_data', 'tahun_data'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         InputData::find($id)->update($request->all());
@@ -180,12 +169,6 @@ class CekDataController extends Controller
         return redirect()->to('cek_data');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         InputData::find($id)->delete();

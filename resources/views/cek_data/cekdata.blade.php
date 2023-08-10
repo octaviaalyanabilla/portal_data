@@ -18,8 +18,7 @@
 </head>
 
 <body>
-    <form method="POST" action="">
-        {{ csrf_field() }}
+    <form action="{{url('/')}}">
         <div class="container-scroller">
             <div class="container-fluid page-body-wrapper full-page-wrapper auth-page">
                 <div class="content-wrapper d-flex align-items-center auth theme-one">
@@ -33,10 +32,10 @@
                                 <div class="form-group" style="margin-bottom: 20px;">
                                     <label for="" class="col-md control-label">Tahun Data</label>
                                     <div class="col-md">
-                                        <select class="form-control" name="tahun_data" required="">
+                                        <select class="form-control" name="web_tahun_data_id" required="">
                                             <option value="">-- Pilih Tahun Data --</option>
                                             @foreach ($tahun_data as $t)
-                                            <option value="{{$t->tahun_data}}">{{ $t->tahun_data }}</option>
+                                            <option value="{{$t->id}}">{{ $t->tahun_data }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -61,17 +60,6 @@
                                             <option value="">-- Pilih Jenis Data --</option>
                                             @foreach ($jenis_data as $j)
                                             <option value="{{$j->id}}">{{ $j->nama_jenis_data }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-group" style="margin-bottom: 20px;">
-                                    <label for="" class="col-md control-label">Kategori Data</label>
-                                    <div class="col-md">
-                                        <select class="form-control" name="" required="" id="kategori_data_id">
-                                            <option value="">-- Pilih Kategori Data --</option>
-                                            @foreach ($kategori_data as $k)
-                                            <option value="{{$k->id}}">{{ $k->nama_kategori_data }}</option>
                                             @endforeach
                                         </select>
                                     </div>
