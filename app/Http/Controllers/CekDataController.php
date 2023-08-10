@@ -41,6 +41,7 @@ class CekDataController extends Controller
         $jenis_data = JenisData::all();
         $kategori_data = KategoriData::all();
         $tahun_data = TahunData::all();
+        $message = null;
         if(count($request->all()) > 0)
         {
             $kategori = DB::table('web_kategori_data')->where('web_jenis_data_id',$request->web_jenis_data_id)->get();
@@ -64,10 +65,17 @@ class CekDataController extends Controller
             $dataTahun = DB::table('web_tahun_data')->where('id',$request->web_tahun_data_id)->first();
             $dataUtama = DB::table('web_data_utama')->where('id',$request->web_data_utama_id)->first();
             $dataJenis = DB::table('web_jenis_data')->where('id',$request->web_jenis_data_id)->first();
-            return view('cek_data.hasildata',compact('kategori','total','dataTahun','dataUtama','dataJenis','chart'));
+            if($total > 0)
+            {
+                return view('cek_data.hasildata',compact('kategori','total','dataTahun','dataUtama','dataJenis','chart'));
+            }else
+            {
+                $message = 'Data Kategori '.$dataJenis->nama_jenis_data.' belum memiliki kategori atau belum ada data yg terinput!';
+                return view('cek_data.cekdata', compact('cek_datas', 'tahun_data', 'data_utama', 'jenis_data', 'kategori_data','request','message'));
+            }
 
         }
-        return view('cek_data.cekdata', compact('cek_datas', 'tahun_data', 'data_utama', 'jenis_data', 'kategori_data'));
+        return view('cek_data.cekdata', compact('cek_datas', 'tahun_data', 'data_utama', 'jenis_data', 'kategori_data','request','message'));
     }
 
     public function create()

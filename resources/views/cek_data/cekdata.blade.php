@@ -26,6 +26,9 @@
                     <div class="row w-100">
                         <div class="col-md-12" style="margin-bottom: 20px;">
                             <h2 style="text-align: center;">PORTAL DATA - KEMENAG KOTA BATU</h2>
+                            @if($message != null)
+                            <p align="center" style="color:red;">{{$message}}</p>
+                            @endif
                         </div>
                         <div class="col-lg-6 mx-auto">
                             <div class="auto-form-wrapper">
@@ -35,7 +38,9 @@
                                         <select class="form-control" name="web_tahun_data_id" required="">
                                             <option value="">-- Pilih Tahun Data --</option>
                                             @foreach ($tahun_data as $t)
-                                            <option value="{{$t->id}}">{{ $t->tahun_data }}</option>
+                                            <option value="{{$t->id}}" {{$request->web_tahun_data_id == $t->id ? 'selected':''}}>
+                                                {{ $t->tahun_data }}
+                                            </option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -47,7 +52,9 @@
                                             onchange="getJenis(this.value)">
                                             <option value="">-- Pilih Data Utama --</option>
                                             @foreach ($data_utama as $d)
-                                            <option value="{{$d->id}}">{{ $d->nama_data }}</option>
+                                            <option value="{{$d->id}}" {{$request->web_data_utama_id == $d->id ? 'selected':''}}>
+                                                {{ $d->nama_data }}
+                                            </option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -59,7 +66,9 @@
                                         id="jenis_data_id" onchange="getKategori(this.value)">
                                             <option value="">-- Pilih Jenis Data --</option>
                                             @foreach ($jenis_data as $j)
-                                            <option value="{{$j->id}}">{{ $j->nama_jenis_data }}</option>
+                                            <option value="{{$j->id}}" {{$request->web_jenis_data_id == $j->id ? 'selected':''}}>
+                                                {{ $j->nama_jenis_data }}
+                                            </option>
                                             @endforeach
                                         </select>
                                     </div>
